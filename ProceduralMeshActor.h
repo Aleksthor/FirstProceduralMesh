@@ -39,24 +39,32 @@ public:
 	void PostLoad();
 	void CreateTriangle();
 	void CreateFlatSquare();
-	void NoiseFunction(TArray<FVector> Vertices);
+	
 	/** Variables */
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int XHeight = 10;
+	int XHeight = 200;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int YWidth = 10;
+	int YWidth = 200;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int XIncrement = 100;
+	int XIncrement = 200;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int YIncrement = 100;
+	int YIncrement = 200;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PerlinVariables")
+	float Scale = 50.f;
 
 	
 	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PerlinVariables")
+	float Amplitude = 10000.f;
+
 	
 
 	

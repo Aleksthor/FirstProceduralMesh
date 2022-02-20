@@ -89,16 +89,63 @@ void AProceduralMeshActor::CreateFlatSquare()
 
 	
 	TArray<FVector> Vertices;
-
+	float YOffset = 0.f;
+	float YOffset1 = 0.f;
+	float YOffset2 = 0.f;
 	for (int y{}; y < YWidth; y++)
 	{
+		float XOffset = 0.f;
+		float XOffset1 = 50000.f;
+		float XOffset2 = -50000.f;
 		for (int x{}; x < XHeight; x++)
 		{
-			
-			Vertices.Add(FVector(0 + (x * XIncrement), 0 + (y * YIncrement), 0));
+			float Z = FMath::PerlinNoise2D(FVector2D( XOffset, YOffset));
+			Z = Z * Amplitude;
+
+			float Z1 = FMath::PerlinNoise2D(FVector2D(XOffset1, YOffset1));
+			Z1 = Z1 * Amplitude;
+
+			float Z2 = FMath::PerlinNoise2D(FVector2D(XOffset2, YOffset2));
+			Z2 = Z2 * Amplitude;
+
+			int input = ((int)Z + (int)Z1 + (int)Z2) / 3;
+			Vertices.Add(FVector(0 + (x * XIncrement), 0 + (y * YIncrement), input));
+			XOffset += 0.02;
+			XOffset1 += 0.01;
+			XOffset2 += 0.005;
 		}
+		YOffset += 0.02;
+		YOffset1 += 0.01;
+		YOffset2 += 0.005;
 	}
-	//NoiseFunction(Vertices);
+	// Adding the Perlin Map. 
+	//for (int y{}; y < YWidth; y++)
+	//{
+	//	for (int x{}; x < XHeight; x++)
+	//	{
+	//		float Scale = 1.f;
+	//		float Frequency = 100.f;
+	//		float Amplitude = 1000.f;
+
+	//		float NoiseHeight = 0.f;
+
+
+	//		float SampleX = x / Scale * Frequency;;
+	//		float SampleY = y / Scale * Frequency;
+
+	//		float PerlinValue = FMath::PerlinNoise2D(FVector2D(SampleY, SampleX)*2-1);
+	//		PerlinValue *= Amplitude;
+	//		PerlinMap.Add(PerlinValue);
+	//	}
+	//}
+	//
+	//for (int y{}; y < YWidth; y++)
+	//{
+	//	for (int x{}; x < XHeight; x++)
+	//	{
+	//		Vertices[x + (y * YWidth)].Z = PerlinMap[x + (y * YWidth)] *100;
+	//	}
+	//}
 
 	TArray<int32> Triangles;
 
@@ -161,31 +208,11 @@ void AProceduralMeshActor::CreateFlatSquare()
 
 	// Enable collision data
 	Mesh->ContainsPhysicsTriMeshData(true);
+	
+	
 }
 
-void AProceduralMeshActor::NoiseFunction(TArray<FVector> Vertices)
-{
-	for (int y{}; y < YWidth; y++)
-	{
-		for (int x{}; x < XHeight; x++)
-		{
-			float NoiseHeight = 0.f;
-			float Amplitude = 10000.f;
-			float Frequency = 10.f;
-			float Scale = 1.f;
 
 
-			float SampleX = x / Scale * Frequency;
-			float SampleY = y / Scale * Frequency;
 
-			float PerlinValue = FMath::PerlinNoise2D(FVector2D(SampleX, SampleY));
-			NoiseHeight += PerlinValue * Amplitude;
-
-			
-
-			Vertices[x + (10 * y)].Z = NoiseHeight;
-
-		}
-	}
-}
 
