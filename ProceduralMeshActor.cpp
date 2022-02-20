@@ -3,7 +3,7 @@
 
 #include "ProceduralMeshActor.h"
 
-// Sets default values
+// Sets default values ; Unreal Constructor
 AProceduralMeshActor::AProceduralMeshActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -15,14 +15,14 @@ AProceduralMeshActor::AProceduralMeshActor()
 	Mesh->bUseAsyncCooking = true;
 }
 
-// Called when the game starts or when spawned
+// Called when the game starts or when spawned : Unreal BeginPlay
 void AProceduralMeshActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
+// Called every frame : Unreal Tick
 void AProceduralMeshActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -45,44 +45,44 @@ void AProceduralMeshActor::PostLoad()
 	CreateFlatSquare();
 }
 
-void AProceduralMeshActor::CreateTriangle()
-{
-	TArray<FVector> vertices;
-	vertices.Add(FVector(0, 0, 0));
-	vertices.Add(FVector(0, 100, 0));
-	vertices.Add(FVector(0, 0, 100));
-
-	TArray<int32> Triangles;
-	Triangles.Add(0);
-	Triangles.Add(1);
-	Triangles.Add(2);
-
-	TArray<FVector> normals;
-	normals.Add(FVector(1, 0, 0));
-	normals.Add(FVector(1, 0, 0));
-	normals.Add(FVector(1, 0, 0));
-
-	TArray<FVector2D> UV0;
-	UV0.Add(FVector2D(0, 0));
-	UV0.Add(FVector2D(10, 0));
-	UV0.Add(FVector2D(0, 10));
-
-
-	TArray<FProcMeshTangent> tangents;
-	tangents.Add(FProcMeshTangent(0, 1, 0));
-	tangents.Add(FProcMeshTangent(0, 1, 0));
-	tangents.Add(FProcMeshTangent(0, 1, 0));
-
-	TArray<FLinearColor> vertexColors;
-	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
-	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
-	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
-
-	Mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
-
-	// Enable collision data
-	Mesh->ContainsPhysicsTriMeshData(true);
-}
+//void AProceduralMeshActor::CreateTriangle()
+//{
+//	TArray<FVector> vertices;
+//	vertices.Add(FVector(0, 0, 0));
+//	vertices.Add(FVector(0, 100, 0));
+//	vertices.Add(FVector(0, 0, 100));
+//
+//	TArray<int32> Triangles;
+//	Triangles.Add(0);
+//	Triangles.Add(1);
+//	Triangles.Add(2);
+//
+//	TArray<FVector> normals;
+//	normals.Add(FVector(1, 0, 0));
+//	normals.Add(FVector(1, 0, 0));
+//	normals.Add(FVector(1, 0, 0));
+//
+//	TArray<FVector2D> UV0;
+//	UV0.Add(FVector2D(0, 0));
+//	UV0.Add(FVector2D(10, 0));
+//	UV0.Add(FVector2D(0, 10));
+//
+//
+//	TArray<FProcMeshTangent> tangents;
+//	tangents.Add(FProcMeshTangent(0, 1, 0));
+//	tangents.Add(FProcMeshTangent(0, 1, 0));
+//	tangents.Add(FProcMeshTangent(0, 1, 0));
+//
+//	TArray<FLinearColor> vertexColors;
+//	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
+//	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
+//	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
+//
+//	Mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
+//
+//	// Enable collision data
+//	Mesh->ContainsPhysicsTriMeshData(true);
+//}
 void AProceduralMeshActor::CreateFlatSquare()
 {
 
@@ -99,6 +99,7 @@ void AProceduralMeshActor::CreateFlatSquare()
 		float XOffset2 = -50000.f;
 		for (int x{}; x < XHeight; x++)
 		{
+			// Here we are creating a Perlin Noise Map, 3 Layers with different seeds. Then setting the input Z to their average
 			float Z = FMath::PerlinNoise2D(FVector2D( XOffset, YOffset));
 			Z = Z * Amplitude;
 
@@ -118,34 +119,7 @@ void AProceduralMeshActor::CreateFlatSquare()
 		YOffset1 += 0.01;
 		YOffset2 += 0.005;
 	}
-	// Adding the Perlin Map. 
-	//for (int y{}; y < YWidth; y++)
-	//{
-	//	for (int x{}; x < XHeight; x++)
-	//	{
-	//		float Scale = 1.f;
-	//		float Frequency = 100.f;
-	//		float Amplitude = 1000.f;
 
-	//		float NoiseHeight = 0.f;
-
-
-	//		float SampleX = x / Scale * Frequency;;
-	//		float SampleY = y / Scale * Frequency;
-
-	//		float PerlinValue = FMath::PerlinNoise2D(FVector2D(SampleY, SampleX)*2-1);
-	//		PerlinValue *= Amplitude;
-	//		PerlinMap.Add(PerlinValue);
-	//	}
-	//}
-	//
-	//for (int y{}; y < YWidth; y++)
-	//{
-	//	for (int x{}; x < XHeight; x++)
-	//	{
-	//		Vertices[x + (y * YWidth)].Z = PerlinMap[x + (y * YWidth)] *100;
-	//	}
-	//}
 
 	TArray<int32> Triangles;
 
