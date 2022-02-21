@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+
 #include "ProceduralMeshActor.generated.h"
 
 UCLASS()
@@ -32,28 +33,30 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UProceduralMeshComponent* Mesh;
 
+
+
 	/** Functions */
 public:
 	
 	void PostActorCreated();
 	void PostLoad();
-	void CreateTriangle();
+	//void CreateTriangle();
 	void CreateFlatSquare();
 	
 	/** Variables */
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int XHeight = 200;
+	int XHeight = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int YWidth = 200;
+	int YWidth = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int XIncrement = 200;
+	int XIncrement = 400;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SquareVariables")
-	int YIncrement = 200;
+	int YIncrement = 400;
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PerlinVariables")
@@ -63,9 +66,9 @@ public:
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PerlinVariables")
-	float Amplitude = 10000.f;
+	float Amplitude = 80000.f;
 
-	
+
 
 	
 	

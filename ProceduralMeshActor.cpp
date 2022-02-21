@@ -10,9 +10,10 @@ AProceduralMeshActor::AProceduralMeshActor()
 	PrimaryActorTick.bCanEverTick = true;
 	// Normal creating a subobject setting it the root
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
-	SetRootComponent(Mesh);
+	Mesh->SetupAttachment(GetRootComponent());
 	// Mulit-thread PhysX cooking
 	Mesh->bUseAsyncCooking = true;
+	
 }
 
 // Called when the game starts or when spawned : Unreal BeginPlay
@@ -89,35 +90,72 @@ void AProceduralMeshActor::CreateFlatSquare()
 
 	
 	TArray<FVector> Vertices;
-	float YOffset = 0.f;
-	float YOffset1 = 0.f;
-	float YOffset2 = 0.f;
+	float seed1 = FMath::FRandRange(-50000, 50000);
+	float seed2 = FMath::FRandRange(-50000, 50000);
+	float seed4 = FMath::FRandRange(-50000,50000);
+	float seed3 = FMath::FRandRange(-50000, 50000);
+
+	float YOffset = seed1;
+	float YOffset1 = seed2;
+	float YOffset2 = seed3;
+	float YOffset3 = seed4;
 	for (int y{}; y < YWidth; y++)
 	{
-		float XOffset = 0.f;
-		float XOffset1 = 50000.f;
-		float XOffset2 = -50000.f;
+		float XOffset = seed1;
+		float XOffset1 = seed2;
+		float XOffset2 = seed3;
+		float XOffset3 = seed4;
 		for (int x{}; x < XHeight; x++)
 		{
 			// Here we are creating a Perlin Noise Map, 3 Layers with different seeds. Then setting the input Z to their average
 			float Z = FMath::PerlinNoise2D(FVector2D( XOffset, YOffset));
-			Z = Z * Amplitude;
+			// Controlling the Perlin Value Somewhat
+			float Amp = Amplitude;
+			Amp = Amp * Z;
+			Z = (Z - 0.01) * Amp;
 
 			float Z1 = FMath::PerlinNoise2D(FVector2D(XOffset1, YOffset1));
-			Z1 = Z1 * Amplitude;
+			// Controlling the Perlin Value Somewhat
+			float Amp1 = Amplitude / 2;
+			Amp1 = Amp1 * Z1 ;
+			Z1 = (Z1 - 0.01) * Amp1;
 
 			float Z2 = FMath::PerlinNoise2D(FVector2D(XOffset2, YOffset2));
-			Z2 = Z2 * Amplitude;
+			// Controlling the Perlin Value Somewhat
+			float Amp2 = Amplitude / 4;
+			Amp2 = Amp2 * Z2;
+			Z2 = (Z2 - 0.01) * Amp2;
 
-			int input = ((int)Z + (int)Z1 + (int)Z2) / 3;
-			Vertices.Add(FVector(0 + (x * XIncrement), 0 + (y * YIncrement), input));
-			XOffset += 0.02;
-			XOffset1 += 0.01;
-			XOffset2 += 0.005;
+			float Z3 = FMath::PerlinNoise2D(FVector2D(XOffset3, YOffset3));
+			// Controlling the Perlin Value Somewhat
+			float Amp3 = Amplitude / 8;
+			Amp3 = Amp3 * Z3;
+			Z3 = (Z3 - 0.01) * Amp3;
+
+			int input = ((int)Z + (int)Z1 + (int)Z2 + (int)Z3) / 4;
+			
+			// Water level, want this flat
+			if (input < 1100)
+			{
+				input = 1100;
+			}
+			int xinc = XIncrement;
+			int yinc = YIncrement;
+			
+
+	
+
+
+			Vertices.Add(FVector(0 + (x *xinc), 0 + (y * yinc), input));
+			XOffset  += 0.01;
+			XOffset1 += 0.02;
+			XOffset2 += 0.04;
+			XOffset3 += 0.08;
 		}
-		YOffset += 0.02;
-		YOffset1 += 0.01;
-		YOffset2 += 0.005;
+		YOffset  += 0.01;
+		YOffset1 += 0.02;
+		YOffset2 += 0.04;
+		YOffset3 += 0.08;
 	}
 
 
@@ -153,7 +191,7 @@ void AProceduralMeshActor::CreateFlatSquare()
 		for (int x{}; x < XHeight; x++)
 		{ 
 		 
-			UV0.Add(FVector2D(x/((float)XHeight-1.f), y/((float)YWidth-1.f)));
+			UV0.Add(FVector2D(((float)x/(float)XHeight-1.f)*50.f, ((float)y / (float)YWidth - 1.f) * 50.f));
 		}
 	}
 
